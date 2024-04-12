@@ -1,0 +1,22 @@
+#Create Dynamo DB Table
+#give the table name any name example terraform_locks. 
+#Partition key has to be LockID
+#Create table
+#Now give the name of the table under Backend config as below 
+
+terraform {
+   backend "s3" {
+     bucket = "sudham-bucket"
+     key = "stateful.tfstate"
+     region = "us-east-1"
+     dynamodb_table = "terraform_locks"
+   }
+}
+
+#run Terraform init
+#run Terraform apply
+#now we can observe in the dynamotable there will be two items created .
+#the second item will be present until the terraform apply is completed.
+#During this if another user tries to apply and runs terraform apply command he will get an error:Error acquiring the state lock
+#Once the first users has completed applying the second user will be able to apply his configuration.
+
