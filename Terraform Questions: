@@ -1,0 +1,30 @@
+*write a terraform to create a ec2 instance and change the default ip to ellastic ip?
+*Explain the state locking and why do you use?
+*How did you create your kubernetes cluster using IAC, explain the steps involved
+*What is the backend you used for terraform, could you write your backend config - for this he was interested in the Dynamo db table
+*Explain server provisioning+configurationanagement you used in your project
+*Suppose two persons change the terraform file and apply their changes what would happen, how do you prevent such a thing from happening
+*Write/brief about a terraform module to provision an infra of your choice
+*What is Modules in terraform ->When there are modules available in registry why did you choose writing custom modules
+
+
+
+Harsha Questions
+*Explain the l‌ines of terraform script and how it works
+*How you will schedule ec2 machine?
+*Terraform code - provision ec2, s3 bucket with acl enabled, VPC.
+ why you want make to change now? (CHECK)
+*HOw to render the value from other resource in terraform?
+*HOw to get the subnet id and vpc in other resource block?(CHECK)
+*If vpc is in another module how to access it in configuration block?(CHECk)
+*Why do we use the statefile?
+*You have Ec2, vpc in your confguration you do terraform plan and apply. Then by mistake delete
+ the state HOw to do a refresh on the state file?
+*What is a tainted resource?file. What will happen?
+*DO you manage the infrastructure using terraform in your current project?
+*What commands have you used in Terraform?
+*How to rectify tainted resources (terraform untaint aws_instance.example)
+*What are dependency logs in terrform? (CHECK)
+*What is data source and how it is useful?
+5. Suppose I have created a resource through terraform and did some manual changes. Next time when I run apply the resource should not be updated what you will do?(terra lifecycle)
+6. What is root module and child module in terraform?
