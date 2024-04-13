@@ -1,0 +1,40 @@
+we have two kinds of provisioners:
+Provisioners block are mentioned inside a null resource or a resource block inside which we want to run the commands.
+1)Local-exec:
+* if you want to execute any command like display the ip adress or any other information in the host system then we can use this provisioner.
+resource "null_resource" "example" {
+  # This null_resource serves as a container for local-exec provisioners
+    triggers = {
+    # Using a timestamp as a trigger ensures that the provisioner runs every time
+    always_run = "${timestamp()}"
+  }
+  provisioner "local-exec" {
+    # This local-exec provisioner executes a command locally on the Terraform host machine
+    command = "echo Hello, World!"
+  }
+}
+
+Null resource- it does not create any resource or does not update the state file, it only runs the script mentioned in provisioners.
+it will only be executed when there is a 
+2)Remote EXec
+*if you want to install any packages or run commands on the remote server which is created then we use this provisioner.
+*It will run the commands after the resource is created.
+*here we need an SSH connection to be set up between the host and the target
+*Once the resource is created if we make changes in the remote exec and try to re run it ,it will delete the resource and recreate it(Limitation-Hence we use Ansible)
+  provisioner "remote-exec" {
+
+    # This remote-exec provisioner installs and starts Nginx
+    inline = [
+      "sudo amazon-linux-extras install -y nginx1.12",
+      "sudo systemctl start nginx"
+    ]
+
+    # Specify the connection details
+    connection {
+      type        = "ssh"
+      user        = "root"  # Or your SSH user for the instance
+      private_key = file("/root/.ssh/id_rsa")  # Path to your SSH private key  #path where you have created your SSH keys
+      host        = aws_instance.server1.private_ip  #IP of the resource beui
+    }
+  }
+}
