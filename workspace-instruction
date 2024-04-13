@@ -1,0 +1,21 @@
+In organization we will have dev, prod, qa, uat and multiple other accounts Instead of creating individual directories, terraform has workspace with which we can handle single directory
+and create separate state files for multiple accounts.By default we will be in default workspace
+WORKSPACE COOMANDS
+terraform workspace new <workspace name>
+terraform workspace list
+terraform workspace new workspace-name
+terraform workspace new dev
+terraform workspace new prod
+terraform workspace new qa
+terraform workspace show
+terraform workspace select workspace-name
+terraform workspace delete workspace-name
+
+STEPS
+1.Write the YAML file  to create workspace as per the environments
+2.Run Terraform init to initaloze the Backend and provider
+3.Then create the workspace for each of the environments using command terraform workspace new <workspace name>
+4.Move to that respective workspace using command terraform wokrspace select workspace-name
+5.Run terraform apply and the state file will be generated in the respective environment folder.
+6.To destroy the resources run the command terraform destroy
+7.To delete the current workspace first swtich to another workspace and then run terraform workspace delete workspace-name
