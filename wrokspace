@@ -1,0 +1,67 @@
+terraform {
+  backend "s3" {
+    bucket = "workspaces3-bucket"
+    key    = "statefile.tfstate"
+    region = "us-west-2"
+  }
+}
+
+provider "aws" {
+    region = "us-east-2"
+}
+
+locals {
+    env = "${terraform.workspace}"
+
+
+    size = {
+        "dev" = 10
+        "prod" = 20
+        "qa" = 30
+    }
+
+    instance = {
+        "dev" = "t2.micro"
+        "prod" = "t2.micro"
+        "qa" = "t2.micro"
+    }
+
+    tags = {
+        "dev" = "dev-backup"
+        "prod" = "prod-backup"
+        "qa" = "qa-backup"
+    }
+}
+resource "aws_ebs_volume" "backup_volume" {
+  availability_zone = "us-east-2a"
+  size              = local.size[local.env]
+
+  tags = {
+    Name = local.tags[local.env]
+  }
+}
+
+resource "aws_volume_attachment" "ebs-attach" {
+  device_name = "/dev/sdf"  
+  instance_id = aws_instance.inst.id
+  volume_id = aws_ebs_volume.backup_volume.id
+}
+
+resource "aws_eip" "lb-03-03" {
+  instance = aws_instance.inst.id
+}
+
+resource "aws_eip_association" "eip-attach" {
+  instance_id = aws_instance.inst.id
+  allocation_id = aws_eip.lb-03-03.id
+}
+
+resource "aws_instance" "inst" {
+  ami           = "ami-0f5daaa3a7fb3378b"
+  instance_type = local.instance[local.env]
+  availability_zone = "us-east-2a"
+
+  tags = {
+    Name = local.tags[local.env]
+  }
+}
