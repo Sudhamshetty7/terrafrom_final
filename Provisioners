@@ -1,0 +1,29 @@
+resource "aws_instance" "server1" {
+    ami = "ami-051f8a213df8bc089"
+    instance_type = "t2.micro"
+    subnet_id = aws_subnet.my_subnet.id
+    vpc_security_group_ids = [aws_security_group.my_sg.id]
+
+tags = {
+  name = "sudham1"
+}
+    provisioner "local-exec" {
+    # This local-exec provisioner outputs the server IP address
+    command = "echo Server IP address is ${self.private_ip}"
+  }
+
+  provisioner "remote-exec" {
+    # This remote-exec provisioner installs and starts Nginx
+    inline = [
+      "sudo amazon-linux-extras install -y nginx1.12",
+      "sudo systemctl start nginx"
+    ]
+# Specify the connection details
+    connection {
+      type        = "ssh"
+      user        = "root"  # Or your SSH user for the instance
+      private_key = file("/root/.ssh/id_rsa")  # Path to your SSH private key
+      host        = aws_instance.server1.private_ip
+    }
+  }
+}
