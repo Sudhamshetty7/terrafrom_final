@@ -1,0 +1,22 @@
+resource "aws_ebs_volume" "backup_volume" {
+  availability_zone = "us-east-2a"
+  size              = local.size[local.env]
+
+  tags = {
+    Name = local.tags[local.env]
+  }
+}
+resource "aws_volume_attachment" "ebs-attach" {
+  device_name = "/dev/sdf"  
+  instance_id = aws_instance.inst.id
+  volume_id = aws_ebs_volume.backup_volume.id
+}
+resource "aws_instance" "inst" {
+  ami           = "ami-0f5daaa3a7fb3378b"
+  instance_type = local.instance[local.env]
+  availability_zone = "us-east-2a"
+
+  tags = {
+    Name = local.tags[local.env]
+  }
+}
